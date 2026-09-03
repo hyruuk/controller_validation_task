@@ -1,0 +1,79 @@
+[project]
+name = "controller_validation_task"
+version = "0.1.0"
+description = "Lightweight PsychoPy task to validate an fMRI/MEG/EEG-compatible game controller."
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "Yann Harel", email = "yharel109@gmail.com" }]
+
+dependencies = [
+    # Upper bound: PsychoPy makes breaking API changes between feature
+    # releases, and the flip/clock behaviour in task.py is validated against
+    # the 2026.1 series. Raise it deliberately, after re-checking timing.
+    "psychopy>=2025.1,<2026.2",
+    "numpy<2",
+    "pandas>=1.5",
+    "Pillow",
+    "pylsl",
+    "pyserial",
+    "pyparallel",
+    "python-dotenv",
+    "tqdm",
+    # PsychoPy imports wx transitively (psychopy.localization). The PyPI
+    # wheel links against a newer libwx than Ubuntu 24.04 / Mint 22 ships, so
+    # it MUST come from the distro-specific wheel pinned in
+    # [tool.uv.sources] below — otherwise `import psychopy.visual` fails with
+    # "version WXU_3.2.6 not found".
+    "wxPython",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov", "ruff"]
+
+[project.scripts]
+controller-validation-task = "controller_validation_task.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+# See the wxPython comment in [project.dependencies]. Swap this URL for your
+# distro's directory at https://extras.wxpython.org/wxPython4/extras/linux/gtk3/
+wxpython = [
+    { url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04/wxPython-4.2.2-cp310-cp310-linux_x86_64.whl", marker = "python_version == '3.10'" },
+]
+
+[tool.uv]
+# Transitive pins chosen to match what is already resolvable offline on the
+# lab machines. They are compatible with the declared requirements; uv.lock is
+# the real source of truth for exact versions.
+constraint-dependencies = ["pyqt6-qt6==6.11.1", "pyqt6==6.11.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["controller_validation_task"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"controller_validation_task/assets" = "controller_validation_task/assets"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# Selected explicitly rather than relying on ruff's defaults, which change
+# between releases and would otherwise churn this file on every upgrade.
+#   E,F  pycodestyle + pyflakes    I   import sorting
+#   B    bugbear                   UP  pyupgrade
+#   SIM  simplify
+select = ["E4", "E7", "E9", "F", "I", "B", "UP", "SIM"]
+ignore = [
+    "E501",    # line length is handled by `line-length` above
+    "B008",    # function call in a default arg — intentional for dataclass fields
+    "SIM105",  # contextlib.suppress is less readable than try/except/pass here
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: tests requiring a display + psychopy (skipped in CI)"]

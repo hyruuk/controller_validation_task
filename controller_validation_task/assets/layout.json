@@ -1,0 +1,51 @@
+{
+  "_comment": [
+    "Controller geometry for the validation task. Coordinates are in IMAGE",
+    "PIXELS, origin at the TOP-LEFT of `image`, matching what you read off",
+    "the PNG in an image editor. layout.to_psychopy_pix() converts them to",
+    "PsychoPy's centred 'pix' units at load time.",
+    "",
+    "To use a different controller: drop your PNG next to this file, update",
+    "`image` and `image_size`, and redraw the `buttons` hit shapes. Each key",
+    "in `buttons` must match a key in config.json -> design.keys."
+  ],
+
+  "image": "ctrlr.png",
+  "image_size": [800, 481],
+
+  "buttons": {
+    "l": {"shape": "polygon", "vertices": [[132, 176], [175, 176], [196, 200], [175, 222], [132, 222]]},
+    "r": {"shape": "polygon", "vertices": [[250, 176], [290, 176], [290, 222], [250, 222], [230, 200]]},
+    "u": {"shape": "polygon", "vertices": [[189, 162], [189, 120], [233, 120], [233, 162], [211, 184]]},
+    "d": {"shape": "polygon", "vertices": [[189, 235], [189, 276], [232, 276], [232, 235], [211, 215]]},
+    "a": {"shape": "circle", "center": [648, 200], "radius": 25},
+    "b": {"shape": "circle", "center": [592, 253], "radius": 25},
+    "x": {"shape": "circle", "center": [592, 144], "radius": 25},
+    "y": {"shape": "circle", "center": [538, 200], "radius": 25}
+  },
+
+  "halves": {
+    "l": ["l", "r", "u", "d"],
+    "r": ["a", "b", "x", "y"]
+  },
+
+  "highlight": {
+    "fill_color": [255, 160, 110],
+    "color_space": "rgb255",
+    "opacity": 0.6,
+    "line_width": 0
+  },
+
+  "cues": {
+    "short": {
+      "shape": "circle", "pos": [0, 0], "radius": 25,
+      "fill_color": [255, 165, 30], "line_color": [255, 165, 30], "color_space": "rgb255"
+    },
+    "long": {
+      "shape": "rect", "pos": [0, 0], "width": 100, "height": 20,
+      "fill_color": [40, 220, 120], "color_space": "rgb255"
+    }
+  },
+
+  "dim_opacity": -0.5
+}
