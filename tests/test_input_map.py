@@ -15,12 +15,11 @@ from __future__ import annotations
 import dataclasses
 
 import pytest
+from conftest import import_or_skip
 
 from controller_validation_task import settings as S
 
-pytest.importorskip("psychopy", reason="input.py imports psychopy")
-
-from controller_validation_task import input as I  # noqa: E402
+I = import_or_skip("controller_validation_task.input", reason="input.py imports psychopy")  # noqa: E741
 
 
 def test_default_map_accepts_arrow_keys():

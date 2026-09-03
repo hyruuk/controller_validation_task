@@ -13,8 +13,9 @@ psychopy API name, or a module-level call that no longer exists.
 from __future__ import annotations
 
 import pytest
+from conftest import import_or_skip
 
-psychopy = pytest.importorskip("psychopy", reason="psychopy not installed")
+psychopy = import_or_skip("psychopy", reason="psychopy not importable here")
 
 pytestmark = pytest.mark.integration
 
